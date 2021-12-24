@@ -37,6 +37,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'training_api',
+    'family_tree_view',
+    'drf_yasg',
+    'psycopg2',
 ]
 
 MIDDLEWARE = [
