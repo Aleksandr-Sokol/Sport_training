@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.response import Response
 from .models import AdvUser, Repeated, Workout, SetWorkout
-from .serializers import WorkoutSerializer
+from .serializers import WorkoutSerializer, SetWorkoutSerializer
 
 
 class ListListObjects(ListCreateAPIView):
@@ -26,8 +26,8 @@ class ListListObjects(ListCreateAPIView):
 
 class WorkoutView(ListListObjects):
     """
-    Место рождения человека: Страна и город
-    Может передаваться информация об одном месте, так и информация о нескольких местах в виде списка
+    Одно упражнение
+    Может передаваться информация об одном упражнении, так и информация о нескольких упражнениях в виде списка
     """
     queryset = Workout.objects.all()
     serializer_class = WorkoutSerializer
@@ -35,7 +35,24 @@ class WorkoutView(ListListObjects):
 
 class SingleWorkoutView(RetrieveUpdateDestroyAPIView):
     """
-    Место рождения человека: Страна и город
+    упражнение
     """
     queryset = Workout.objects.all()
     serializer_class = WorkoutSerializer
+
+
+class SetWorkoutView(ListListObjects):
+    """
+    Одно упражнение
+    Может передаваться информация об одном упражнении, так и информация о нескольких упражнениях в виде списка
+    """
+    queryset = SetWorkout.objects.all()
+    serializer_class = SetWorkoutSerializer
+
+
+class SingleSetWorkoutView(RetrieveUpdateDestroyAPIView):
+    """
+    упражнение
+    """
+    queryset = SetWorkout.objects.all()
+    serializer_class = SetWorkoutSerializer
