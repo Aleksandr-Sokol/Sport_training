@@ -1,31 +1,57 @@
-from datetime import date, timedelta
-from http import HTTPStatus
-
+import pytest
 from django.test import tag
 from django.contrib.auth import get_user_model, authenticate
 from django.test import TestCase
-# from .models import Person, Position
-from django.test.client import RequestFactory
+from .models import AdvUser, Workout
+# from .views import f
 from django.test import Client
+from .serializers import WorkoutSerializer
+
+# **********************
+# pytest --tb=no -v
+
+#
+# @pytest.mark.django_db
+# @pytest.fixture()
+# def my_user():
+#     """Return answer to ultimate question."""
+#     w = Workout.objects.create(name='test')
+#     w.save()
+#     return w
+#
+# @pytest.mark.django_db
+# def test_my_user(my_user):
+#     me = Workout.objects.get(name='test')
+#     assert me
+
+@pytest.mark.django_db
+def test_client_01():
+    c = Client()
+    response = c.get('/api/workout')
+    assert response.status_code == 200
 
 
-@tag('autarization')
-class SigninTest(TestCase):
-    def setUp(self):
-        self.user = get_user_model().objects.create_user(username='test', password='12test12', email='test@example.com')
-        self.user.save()
+@pytest.mark.django_db
+def test_client_02():
+    valid_data = {
+        "name": "name_0",
+        "description": "description_0",
+        "unit": "I",
+    }
+    c = Client()
+    response = c.post('/api/workout', valid_data)
+    assert response.status_code == 200
 
-    def tearDown(self):
-        self.user.delete()
 
-    def test_correct(self):
-        user = authenticate(username='test', password='12test12')
-        self.assertTrue((user is not None) and user.is_authenticated)
-
-    def test_wrong_username(self):
-        user = authenticate(username='test', password='error')
-        self.assertFalse(user is not None and user.is_authenticated)
-
-    def test_wrong_pssword(self):
-        user = authenticate(username='test', password='wrong')
-        self.assertFalse(user is not None and user.is_authenticated)
+@pytest.mark.django_db
+def test_serialize_01():
+    valid_data = {
+        "name": "name_0",
+        "description": "description_0",
+        "unit": "I",
+    }
+    serializer = WorkoutSerializer(data=valid_data)
+    assert serializer.is_valid()
+    assert serializer.validated_data == valid_data
+    assert serializer.data == valid_data
+    assert serializer.errors == {}
