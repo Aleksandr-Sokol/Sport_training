@@ -13,6 +13,12 @@ class WorkoutSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class RepeatedSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Workout
+        fields = '__all__'
+
+
 class SetWorkoutSerializer(serializers.ModelSerializer):
     work = WorkoutSerializer(many=True, read_only=False)
 

@@ -1,3 +1,4 @@
+from django.contrib.postgres.indexes import GinIndex
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
@@ -20,12 +21,22 @@ class AdvUser(AbstractUser):
 
 
 class Workout(models.Model):
-    name = models.CharField(max_length=120, null=False)
-    description = models.TextField(null=True, blank=True)
+    name = models.CharField(max_length=120,
+                            null=False,
+                            # db_index=False,
+                            )
+    description = models.TextField(null=True,
+                                   blank=True,
+                                   # db_index=False,
+                                   )
     unit = models.CharField(max_length=1,
                             choices=(('I', 'Iteration'), ('T', 'Time')),
                             blank=False,
-                            default='I')
+                            default='I',
+                            )
+
+    class Meta:
+        indexes = [GinIndex(fields=['name', 'description'])]
 
     def __str__(self):
         return f'{self.name}, unit is {self.unit}'
@@ -47,8 +58,12 @@ class SetWorkout(models.Model):
 
 
 class Repeated(models.Model):
-    work = models.ForeignKey(Workout, on_delete=models.CASCADE)
-    set = models.ForeignKey(SetWorkout, on_delete=models.CASCADE)
+    work = models.ForeignKey(Workout,
+                             on_delete=models.CASCADE,
+                             )
+    set = models.ForeignKey(SetWorkout,
+                            on_delete=models.CASCADE,
+                            )
     repeat = models.IntegerField(default=1)
 
     def __str__(self):
